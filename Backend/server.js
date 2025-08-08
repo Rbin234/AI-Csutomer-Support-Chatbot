@@ -12,6 +12,14 @@ const app = express();
 
 app.use(express.json()); // To parse JSON request bodies
 
+// Use CORS middleware BEFORE routes
+app.use(cors({
+  origin: "http://127.0.0.1:5500", // or your actual frontend port
+  credentials: true,
+}));
+
+app.options('*', cors()); // handle preflight
+
 // Default route
 app.get('/', (req, res) => {
   res.send('AI Chatbot Backend is running...');
@@ -20,9 +28,7 @@ app.get('/', (req, res) => {
 // API routes
 app.use('/api/v1', routes);
 
-app.use(cors());
-
-// Error handler middleware
+// Error handler middleware (usually last)
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
