@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Profile</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .profile-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      background: #0077ff;
+      color: white;
+      font-size: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h2 {
+      margin: 0.5rem 0;
+      color: #333;
+    }
+    p {
+      margin: 0.3rem 0;
+      color: #555;
+      font-size: 1rem;
+    }
+    .label {
+      font-weight: 600;
+      color: #777;
+    }
+    .btn-back {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.5rem 1rem;
+      background: #0077ff;
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+    .btn-back:hover {
+      background: #005fcc;
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-card">
+    <div class="avatar" aria-label="User initials">R</div>
+    <h2 id="userName">Raian</h2>
+    <p><span class="label">Email:</span> <span id="userEmail">1234@gmail.com</span></p>
+    <p><span class="label">Role:</span> <span id="userRole">user</span></p>
+    <p><span class="label">Joined:</span> <span id="userCreatedAt">August 8, 2025</span></p>
+
+    <a href="index.html" class="btn-back">Back to Home</a>
+  </div>
+
+  <script>
+    // If you want to dynamically load data, you could do it here.
+    // For now, hardcoded based on your data:
+
+    const user = {
+      _id: "68966c68ce2e31eca2b85ee4",
+      name: "Raian",
+      email: "1234@gmail.com",
+      role: "user",
+      createdAt: "2025-08-08T21:30:16.522Z",
+      updatedAt: "2025-08-08T21:30:16.522Z"
+    };
+
+    document.getElementById('userName').textContent = user.name;
+    document.getElementById('userEmail').textContent = user.email;
+    document.getElementById('userRole').textContent = user.role;
+
+    const createdDate = new Date(user.createdAt);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('userCreatedAt').textContent = createdDate.toLocaleDateString(undefined, options);
+
+    // Set avatar initials dynamically
+    const avatarDiv = document.querySelector('.avatar');
+    avatarDiv.textContent = user.name.charAt(0).toUpperCase();
+  </script>
+</body>
+</html>

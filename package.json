@@ -1,0 +1,27 @@
+{
+  "name": "ai-csutomer-support-chatbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rbin234/AI-Csutomer-Support-Chatbot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rbin234/AI-Csutomer-Support-Chatbot/issues"
+  },
+  "homepage": "https://github.com/Rbin234/AI-Csutomer-Support-Chatbot#readme",
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "vite": "^7.0.6"
+  }
+}
