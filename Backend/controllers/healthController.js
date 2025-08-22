@@ -20,8 +20,9 @@ export const handleHealthRequest = async (req, res) => {
 
     const result = await client.predict(api_name, params);
     res.json({ success: true, data: result.data });
-
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
+// const parsedResult = await JSON.parse(result.data[0]);

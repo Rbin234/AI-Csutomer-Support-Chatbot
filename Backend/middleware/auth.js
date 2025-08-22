@@ -1,11 +1,14 @@
-const jwt = require('jsonwebtoken');
+import jwt from "jsonwebtoken";
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
-module.exports = function verifyToken(req, res, next) {
+const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return res.status(401).json({ success : false, message: 'Access denied. No token provided.' });
+    return res
+      .status(401)
+      .json({ success: false, message: "Access denied. No token provided." });
   }
 
   try {
@@ -13,6 +16,10 @@ module.exports = function verifyToken(req, res, next) {
     req.user = decoded; // You can access user info in next middleware
     next();
   } catch (err) {
-    return res.status(403).json({ success : false, message: 'Invalid or expired token.' });
+    return res
+      .status(403)
+      .json({ success: false, message: "Invalid or expired token." });
   }
 };
+
+export default verifyToken;

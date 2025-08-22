@@ -1,34 +1,34 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const chatSchema = new mongoose.Schema(
   {
     title: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
+      ref: "User",
+      required: true,
     },
     messages: [
       {
         sender: {
           type: String,
-          enum: ['user', 'ai'],
-          required: true
+          enum: ["user", "ai"],
+          required: true,
         },
         message: {
           type: String,
-          required: true
+          required: true,
         },
         timestamp: {
           type: Date,
-          default: Date.now
-        }
-      }
-    ]
+          default: Date.now,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
@@ -36,4 +36,4 @@ const chatSchema = new mongoose.Schema(
 // Optional indexing
 chatSchema.index({ userId: 1, createdAt: -1 });
 
-module.exports = mongoose.model('Chat', chatSchema);
+export default mongoose.model("Chat", chatSchema);

@@ -1,10 +1,10 @@
-const express = require('express');
+import express from "express";
 const router = express.Router();
 
-const userRoutes = require('./user.routes');
-const chatRoutes = require('./chat.routes');
+import userRoutes from "./user.routes.js";
+import chatRoutes from "./chat.routes.js";
 
-router.use('/users', userRoutes);
-router.use('/chats', chatRoutes);
+router.use("/users", userRoutes);
+router.use("/chats", chatRoutes);
 
-module.exports = router;
+export default router;
