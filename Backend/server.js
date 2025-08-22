@@ -16,7 +16,7 @@ connectDB();
 const app = express();
 
 // Dynamic CORS Origin Handling
-const allowedOrigins = ['http://127.0.0.1:5500', 'http://localhost:5500'];
+const allowedOrigins = ['http://127.0.0.1:5501', 'http://localhost:5501'];
 const corsOptions = {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -41,9 +41,6 @@ app.get('/', (req, res) => {
   res.send('AI Chatbot Backend is running...');
 });
 
-// API routes
-app.use('/api/v1', routes);
-
 // Attach Hugging Face client globally
 let client;
 (async () => {
@@ -53,7 +50,7 @@ let client;
 
 // Routes
 app.use("/api/health", healthRoutes);
-
+app.use('/api/v1', routes);
 
 // Error handler middleware (should be after all routes)
 app.use(errorHandler);

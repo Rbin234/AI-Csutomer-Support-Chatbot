@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HealthAI - Chat History</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+<style>
+  :root {
+    --primary-color: #2563eb;
+    --primary-light: #3b82f6;
+    --primary-dark: #1d4ed8;
+    --secondary-color: #6366f1;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --user-msg-bg: #2563eb;
+    --bot-msg-bg: #f3f4f6;
+    --border-radius: 16px;
+    --shadow: 0 10px 25px -5px rgba(0,0,0,0.1),0 8px 10px -6px rgba(0,0,0,0.1);
+  }
+
+  [data-theme="dark"] {
+    --primary-color: #3b82f6;
+    --primary-light: #60a5fa;
+    --primary-dark: #2563eb;
+    --secondary-color: #818cf8;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --bg-primary: #111827;
+    --bg-secondary: #1f2937;
+    --bg-tertiary: #374151;
+    --user-msg-bg: #2563eb;
+    --bot-msg-bg: #374151;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+
+  body {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+    transition: background-color 0.3s ease;
+  }
+
+  .chatbot-container {
+    width:100%;
+    max-width:480px;
+    height:90vh;
+    background: var(--bg-primary);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .chatbot-header {
+    background: var(--primary-color);
+    color:white;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
+  .chatbot-header h1 { font-size:1.4rem; font-weight:600; }
+
+  .header-actions button {
+    background:transparent;
+    border:none;
+    color:white;
+    cursor:pointer;
+    border-radius:50%;
+    width:36px;
+    height:36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition: background 0.2s;
+  }
+
+  .header-actions button:hover { background: rgba(255,255,255,0.1); }
+
+  .chat-window {
+    flex:1;
+    padding:20px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    background: var(--bg-primary);
+  }
+
+  .message { display:flex; max-width:85%; animation:fadeIn 0.3s ease; }
+  @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+  .message.user { align-self:flex-end; }
+  .message.bot { align-self:flex-start; }
+  .message-content {
+    padding:12px 16px;
+    border-radius:18px;
+    line-height:1.5;
+    box-shadow:0 2px 5px rgba(0,0,0,0.05);
+  }
+  .message.user .message-content { background:var(--user-msg-bg); color:white; border-bottom-right-radius:5px; }
+  .message.bot .message-content { background:var(--bot-msg-bg); color:var(--text-primary); border-bottom-left-radius:5px; }
+
+  .formatted-response { display:flex; flex-direction:column; gap:12px; }
+  .response-item { padding:12px; background:rgba(255,255,255,0.5); border-radius:12px; margin-bottom:8px; }
+  [data-theme="dark"] .response-item { background:rgba(55,65,81,0.7); }
+
+  .drug-info { display:grid; grid-template-columns:auto 1fr; gap:8px 16px; }
+  .drug-info .label { font-weight:600; color:var(--text-secondary); }
+
+  .article-item, .topic-item { border-left:3px solid var(--primary-color); padding-left:12px; }
+  .article-title, .topic-title { font-weight:600; margin-bottom:4px; }
+  .article-authors, .topic-description { color:var(--text-secondary); font-size:0.9rem; margin-bottom:6px; }
+  .article-journal, .topic-url { font-size:0.85rem; color:var(--primary-color); }
+
+  .chat-window::-webkit-scrollbar { width:6px; }
+  .chat-window::-webkit-scrollbar-track { background:transparent; }
+  .chat-window::-webkit-scrollbar-thumb { background:var(--text-secondary); border-radius:3px; opacity:0.5; }
+
+  @media (max-width:600px) {
+    .chatbot-container { height:95vh; }
+    .chat-window { padding:16px; }
+    .message { max-width:90%; }
+  }
+</style>
+</head>
+<body>
+  <div class="chatbot-container">
+    <header class="chatbot-header">
+      <h1>HealthAI - Chat History</h1>
+      <div class="header-actions">
+        <button id="themeToggle" class="material-symbols-rounded">dark_mode</button>
+      </div>
+    </header>
+
+    <div class="chat-window" id="chatWindow">
+      <div class="message bot"><div class="message-content">Loading chat history...</div></div>
+    </div>
+  </div>
+
+<script>
+const chatWindow = document.getElementById("chatWindow");
+const themeToggle = document.getElementById("themeToggle");
+
+function initTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.body.setAttribute('data-theme', savedTheme);
+  themeToggle.textContent = savedTheme==='dark'?'light_mode':'dark_mode';
+}
+
+themeToggle.addEventListener('click',()=>{
+  const current=document.body.getAttribute('data-theme');
+  const newTheme=current==='dark'?'light':'dark';
+  document.body.setAttribute('data-theme',newTheme);
+  localStorage.setItem('theme',newTheme);
+  themeToggle.textContent=newTheme==='dark'?'light_mode':'dark_mode';
+});
+
+function appendMessage(content,sender="bot"){
+  const msg=document.createElement("div");
+  msg.classList.add("message",sender);
+
+  const contentDiv=document.createElement("div");
+  contentDiv.classList.add("message-content");
+
+  if(typeof content==='string'){ contentDiv.textContent=content; }
+  else{ contentDiv.appendChild(content); }
+
+  msg.appendChild(contentDiv);
+  chatWindow.appendChild(msg);
+  chatWindow.scrollTop=chatWindow.scrollHeight;
+  return msg;
+}
+
+function formatHealthResponse(type,data){
+  if(!data)return document.createTextNode("No data found.");
+  const container=document.createElement("div");
+  container.classList.add("formatted-response");
+
+  switch(type){
+    case"fda":{
+      const r=data.results||{};
+      const drug=document.createElement("div");
+      drug.classList.add("drug-info","response-item");
+      
+      // Add drug name from the main response
+      const drugNameLabel = document.createElement("span");
+      drugNameLabel.classList.add("label");
+      drugNameLabel.textContent = "Drug Name:";
+      const drugNameValue = document.createElement("span");
+      drugNameValue.textContent = " " + (data.drug_name || "Unknown");
+      drug.appendChild(drugNameLabel);
+      drug.appendChild(drugNameValue);
+      drug.appendChild(document.createElement("br"));
+      
+      // Add other fields
+      const fields = [
+        {label:"Generic Name",value:r.generic_name},
+        {label:"Brand Name",value:r.brand_name},
+        {label:"Manufacturer",value:r.manufacturer},
+        {label:"Product Type",value:r.product_type},
+        {label:"Route",value:Array.isArray(r.route)?r.route.join(", "):r.route},
+        {label:"Marketing Status",value:r.marketing_status||"N/A"}
+      ];
+
+      fields.forEach(f=>{
+        if(f.value){
+          const lbl=document.createElement("span"); lbl.classList.add("label"); lbl.textContent=f.label+":";
+          const val=document.createElement("span"); val.textContent=" "+f.value;
+          drug.appendChild(lbl); drug.appendChild(val); drug.appendChild(document.createElement("br"));
+        }
+      });
+      container.appendChild(drug); break;
+    }
+    case"pubmed":{
+      if(!data.articles||!data.articles.length)return document.createTextNode("No articles found.");
+      data.articles.forEach(a=>{
+        const art=document.createElement("div"); art.classList.add("article-item","response-item");
+        const t=document.createElement("div"); t.classList.add("article-title"); t.textContent=a.title||"No title";
+        const auth=document.createElement("div"); auth.classList.add("article-authors"); auth.textContent=`By: ${a.authors?a.authors.join(", "):"Unknown"}`;
+        const j=document.createElement("div"); j.classList.add("article-journal"); j.textContent=`${a.journal||"Unknown"}, Published: ${a.publication_date||"Unknown"}`;
+        const l=document.createElement("div"); l.style.marginTop="8px";
+        if(a.doi){ const link=document.createElement("a"); link.href=`https://doi.org/${a.doi}`; link.target="_blank"; link.textContent="View Article"; link.style.color="var(--primary-color)"; l.appendChild(link);}
+        art.appendChild(t); art.appendChild(auth); art.appendChild(j); art.appendChild(l);
+        container.appendChild(art);
+      }); break;
+    }
+    case"topic":{
+      if(!data.topics||!data.topics.length)return document.createTextNode("No topics found.");
+      data.topics.forEach(t=>{
+        const topicDiv=document.createElement("div"); topicDiv.classList.add("topic-item","response-item");
+        const title=document.createElement("div"); title.classList.add("topic-title"); title.textContent=t.title||"No title";
+        topicDiv.appendChild(title);
+        if(t.description){ const d=document.createElement("div"); d.classList.add("topic-description"); d.textContent=t.description; topicDiv.appendChild(d);}
+        if(t.url){ const link=document.createElement("a"); link.href=t.url; link.target="_blank"; link.classList.add("topic-url"); link.textContent="Learn more"; link.style.display="block"; link.style.marginTop="8px"; topicDiv.appendChild(link);}
+        container.appendChild(topicDiv);
+      }); break;
+    }
+    default: container.textContent=JSON.stringify(data,null,2);
+  }
+  return container;
+}
+
+async function loadPreviousMessages() {
+  try {
+    const res = await fetch("http://localhost:8082/api/health");
+    const data = await res.json();
+
+    if (!data.success || !data.data.length) {
+      appendMessage("No chat history found.", "bot");
+      return;
+    }
+
+    chatWindow.innerHTML = "";
+    const messages = data.data[0].messages;
+
+    messages.forEach(msg => {
+      const messageObj = msg.message;
+
+      if (msg.sender === "user") {
+        // Handle user messages
+        if (messageObj.params) {
+          const displayText = messageObj.params.topic || messageObj.params.drug_name || messageObj.params.query || "User query";
+          appendMessage(`Search for: ${displayText}`, "user");
+        } else {
+          appendMessage("User message", "user");
+        }
+      } else if (msg.sender === "ai") {
+        // Handle AI responses
+        if (messageObj.status === "error") {
+          appendMessage(messageObj.error_message || "Sorry, could not find info.", "bot");
+          return;
+        }
+
+        // Determine the type based on the response content
+        let type;
+        if (messageObj.results && messageObj.drug_name) {
+          type = "fda";
+        } else if (messageObj.articles && messageObj.query) {
+          type = "pubmed";
+        } else if (messageObj.topics) {
+          type = "topic";
+        } else {
+          type = "unknown";
+        }
+
+        if (type === "unknown") {
+          // Fallback: show raw data
+          appendMessage(JSON.stringify(messageObj, null, 2), "bot");
+        } else {
+          appendMessage(formatHealthResponse(type, messageObj), "bot");
+        }
+      }
+    });
+
+  } catch (err) {
+    appendMessage("Failed to load chat history.", "bot");
+    console.error(err);
+  }
+}
+
+initTheme();
+loadPreviousMessages();
+</script>
+</body>
+</html>

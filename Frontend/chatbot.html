@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HealthAI Assistant</title>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
+  />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="chatbot.css">
+</head>
+<body>
+  <div class="chatbot-container">
+    <!-- Header -->
+    <header class="chatbot-header">
+      <h1>HealthAI Assistant</h1>
+      <div class="header-actions">
+        <button id="themeToggle" class="material-symbols-rounded">dark_mode</button>
+        <button id="clearChat" class="material-symbols-rounded">delete</button>
+      </div>
+    </header>
+
+    <!-- Chat Messages -->
+    <div class="chat-window" id="chatWindow">
+      <div class="message bot">
+        <div class="message-content">
+          Hello! I'm your HealthAI assistant. I can help you with drug information, research articles, and health topics. How can I assist you today?
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <form class="chat-input-form" id="chatForm">
+      <div class="type-select-wrapper">
+        <select id="typeSelect" required>
+          <option value="" disabled selected>Select type</option>
+          <option value="fda">Drug Info (FDA)</option>
+          <option value="pubmed">Research Articles (PubMed)</option>
+          <option value="topic">Health Topics</option>
+        </select>
+      </div>
+      <input type="text" id="chatInput" placeholder="Ask me about health information..." required />
+      <button type="submit" class="material-symbols-rounded">arrow_upward</button>
+    </form>
+  </div>
+
+  <script src="chatbot.js"></script>
+</body>
+</html>
