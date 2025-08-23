@@ -49,6 +49,23 @@ body {
   transition: background-color 0.3s ease;
 }
 
+.nav-button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #2563eb;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.nav-button:hover {
+  background-color: #1d4ed8;
+}
+
+
+
 .chatbot-container {
   width: 100%;
   max-width: 480px;

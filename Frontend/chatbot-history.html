@@ -50,6 +50,24 @@
     transition: background-color 0.3s ease;
   }
 
+  
+  .nav-button {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    transition: background 0.2s;
+  }
+  
+  .nav-button:hover {
+    background: rgba(255,255,255,0.1);
+  }
+
+
   .chatbot-container {
     width:100%;
     max-width:480px;
@@ -140,6 +158,12 @@
     <header class="chatbot-header">
       <h1>HealthAI - Chat History</h1>
       <div class="header-actions">
+        <a href="index.html" class="nav-button" title="Home">
+          <span class="material-symbols-rounded">home</span>
+        </a>
+        <a href="chatbot.html" class="nav-button" title="Chat">
+          <span class="material-symbols-rounded">chat</span>
+        </a>
         <button id="themeToggle" class="material-symbols-rounded">dark_mode</button>
       </div>
     </header>
